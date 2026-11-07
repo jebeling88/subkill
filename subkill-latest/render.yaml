@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: subkill
+    runtime: docker
+    plan: starter            # needed for a persistent disk
+    healthCheckPath: /healthz
+    disk:
+      name: data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: SUBKILL_DB
+        value: /data/subkill.db
+      - key: ANTHROPIC_API_KEY
+        sync: false          # you paste this in the Render dashboard
+      - key: SUBKILL_INVITE_CODE
+        sync: false          # a passphrase you share with family/testers
+      - key: PUBLIC_BASE_URL
+        sync: false          # e.g. https://subkill.onrender.com
+      - key: SUBKILL_SUPPORT_EMAIL
+        sync: false          # shown on the privacy/support pages

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SubKill — find it, rank it, kill it</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<section id="auth" class="hidden">
+  <form id="authForm" class="card auth">
+    <div class="logo">Sub<b>Kill</b></div>
+    <p class="muted">Every forgotten subscription, ranked by what it costs you.</p>
+    <input id="email" type="email" placeholder="Email" autocomplete="email" required>
+    <input id="password" type="password" placeholder="Password (8+ characters)" autocomplete="current-password" required minlength="8">
+    <input id="invite" class="hidden" placeholder="Invite code" autocomplete="off">
+    <button class="btn primary" id="authBtn">Sign in</button>
+    <button type="button" class="link" id="authToggle">New here? Create an account</button>
+    <p class="err" id="authErr"></p>
+  </form>
+</section>
+
+<main id="app" class="hidden">
+  <header>
+    <div class="logo">Sub<b>Kill</b></div>
+    <div class="row">
+      <button class="btn primary" id="openAdd">+ Add subscriptions</button>
+      <button class="btn ghost" id="logout" title="Sign out">Sign out</button>
+    </div>
+  </header>
+
+  <section class="stats" id="stats"></section>
+  <div id="alert"></div>
+
+  <section class="toolbar">
+    <input id="q" type="search" placeholder="Search">
+    <select id="sort" aria-label="Sort">
+      <option value="cost">Most expensive</option>
+      <option value="unused">Longest unused</option>
+      <option value="recent">Recently used</option>
+      <option value="most_used">Most used</option>
+      <option value="oldest">Oldest</option>
+      <option value="newest">Newest</option>
+      <option value="renewal">Renews soonest</option>
+      <option value="name">Name A–Z</option>
+    </select>
+    <select id="fOwner" aria-label="Who"><option value="">Everyone</option></select>
+    <select id="fCat" aria-label="Category"><option value="">All categories</option></select>
+    <select id="fCycle" aria-label="Billing"><option value="">Any billing</option><option>weekly</option><option>monthly</option><option>quarterly</option><option>yearly</option></select>
+    <select id="fStatus" aria-label="Status">
+      <option value="live">Still charging</option><option value="cancelling">Cancelling</option>
+      <option value="trial">Trials</option><option value="cancelled">Killed</option><option value="all">All</option>
+    </select>
+    <label class="chk"><input type="checkbox" id="fUnused"> Unused 60+ days</label>
+  </section>
+
+  <section id="list" class="list"></section>
+  <p class="muted foot">Amounts are shown in each subscription's own currency but totals add the raw numbers. Subscriptions are found by Claude from the sources you add — always double-check before you kill.</p>
+</main>
+
+<dialog id="addDlg">
+  <div class="dlg">
+    <div class="dlg-h"><h2>Add subscriptions</h2><button class="x" data-close>×</button></div>
+    <div class="tabs">
+      <button data-tab="paste" class="on">Paste emails</button>
+      <button data-tab="file">Bank CSV / file</button>
+      <button data-tab="gmail">Gmail</button>
+      <button data-tab="manual">Manual</button>
+    </div>
+    <label class="muted">Whose is this?</label>
+    <select id="ownerSel"></select>
+    <div class="pane" data-pane="paste">
+      <textarea id="pasteTxt" placeholder="Paste receipts, renewal notices or bank lines. Claude will pull out the recurring ones."></textarea>
+      <button class="btn primary" id="goPaste">Find subscriptions</button>
+    </div>
+    <div class="pane hidden" data-pane="file">
+      <p class="muted">Export a statement from your bank or card (CSV), or drop in .eml / .txt receipts.</p>
+      <input type="file" id="fileIn" accept=".csv,.ofx,.qfx,.txt,.eml,.mbox">
+      <button class="btn primary" id="goFile">Scan file</button>
+    </div>
+    <div class="pane hidden" data-pane="gmail" id="gmailPane"></div>
+    <div class="pane hidden" data-pane="manual">
+      <div class="grid2">
+        <input id="mName" placeholder="Name (e.g. Netflix)">
+        <input id="mAmt" type="number" step="0.01" min="0" placeholder="Amount">
+        <select id="mCycle"><option>monthly</option><option>yearly</option><option>weekly</option><option>quarterly</option></select>
+        <select id="mCat"></select>
+      </div>
+      <button class="btn primary" id="goManual">Add</button>
+    </div>
+    <p class="msg" id="addMsg"></p>
+    <details class="members"><summary>Household members</summary>
+      <input id="membersIn" placeholder="Me, Wife, Kids">
+      <button class="btn ghost" id="saveMembers">Save</button>
+    </details>
+  </div>
+</dialog>
+
+<dialog id="killDlg"><div class="dlg" id="killBody"></div></dialog>
+<section id="chat" class="chat hidden">
+  <div id="chatHead"><span>✨ Ask Claude to kill something</span><span id="chatChev">▲</span></div>
+  <div id="chatLog" class="hidden"></div>
+  <form id="chatForm"><input id="chatIn" placeholder="Cancel Netflix…" autocomplete="off"><button class="btn primary">Send</button></form>
+</section>
+<div id="toast" class="toast hidden"></div>
+<script src="/static/app.js"></script>
+</body>
+</html>
